@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  # ⚙️ MySQL 데이터베이스 서비스 정의
+  db:
+    image: mysql:8.0
+    container_name: study_room_db
+    restart: always
+    # 포트 설정 (로컬 PC : 컨테이너)
+    ports:
+      - "3306:3306"
+    # 데이터베이스 설정 및 인증 정보
+    environment:
+      MYSQL_DATABASE: study_room # 생성할 데이터베이스 스키마 이름
+      MYSQL_ROOT_PASSWORD: rootpassword # 루트 계정 비밀번호
+    # 💾 볼륨 설정: DB 데이터를 로컬에 저장하여 영속성 확보
+    # 🚀 초기화 스크립트: 컨테이너 최초 생성 시 init.sql 실행
+    volumes:
+      - ./db_data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
