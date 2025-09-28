@@ -19,9 +19,9 @@ public class Room {
     private String location;
 
     @Column(name = "capacity")
-    private Long capacity;
+    private int capacity;
 
-    public Room(String name, String location, Long capacity) {
+    public Room(String name, String location, int capacity) {
         this.name = name;
         this.location = location;
         this.capacity = capacity;

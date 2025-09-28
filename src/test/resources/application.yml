@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb  # 인메모리 H2 DB 사용 (testdb는 DB 이름)
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # 테스트 시작 시 테이블 생성, 종료 시 자동 삭제
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect # H2 방언(Dialect) 사용
+
+  # H2 콘솔 활성화 (선택 사항이지만 디버깅에 유용)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+
+  # application.properties -> application.yml
+  application:
+    name: getStudyRoom
+
+#jwt secret Key
+jwt:
+  secret:
+    key: SSByZWFsbHkgd2FudCB0byBnZXQgYSBqb2IgYXQgU3luY0xpZmUK

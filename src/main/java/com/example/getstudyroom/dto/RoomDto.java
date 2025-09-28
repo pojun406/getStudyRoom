@@ -19,6 +19,6 @@ public class RoomDto {
         private String location;
 
         @Positive(message = "수용인원은 1 이상이어야 합니다.")
-        private Long capacity;
+        private int capacity;
     }
 }

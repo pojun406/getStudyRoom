@@ -7,8 +7,10 @@ import com.example.getstudyroom.entity.User;
 import com.example.getstudyroom.enums.RolesType;
 import com.example.getstudyroom.repository.ReservationRepository;
 import com.example.getstudyroom.repository.RoomRepository;
+import com.example.getstudyroom.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,28 +21,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
     private final RoomRepository roomRepository;
 
     @Transactional
-    public Long createReservation(ReservationDto.Request dto, User user){
-        // 방 존재 여부 확인
-        Room room = roomRepository.findById(dto.getRoomId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방 입니다."));
+    public Long createReservation(ReservationDto.Request requestDto, User userFromController) {
+        // Controller에서 받은 user는 Detached 상태일 수 있으므로,
+        // DB에서 다시 조회하여 영속 상태(Managed)의 User 객체를 가져옵니다.
+        User managedUser = userRepository.findById(userFromController.getId())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        // 예약 조회(겹치는 방 확인)
+        Room room = roomRepository.findById(requestDto.getRoomId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+
+        // 비관적 락을 통해 겹치는 예약 조회
         List<Reservation> overlappingReservations = reservationRepository
-                .findOverlappingReservationsWithLock(dto.getRoomId(), dto.getStartAt(), dto.getEndAt());
+                .findOverlappingReservationsWithLock(requestDto.getRoomId(), requestDto.getStartAt(), requestDto.getEndAt());
 
-        // 겹친다면 예외 발생
-        if(!overlappingReservations.isEmpty()){
-            throw new IllegalArgumentException("해당시간에 이미 예약이 존재합니다.");
+        if (!overlappingReservations.isEmpty()) {
+            throw new IllegalStateException("해당 시간에 이미 예약이 존재합니다.");
         }
 
-        // 예약 성공 및 저장
-        Reservation reservation = new Reservation(user, room, dto.getStartAt(), dto.getEndAt());
-
+        // 새로 조회한 영속 상태의 User 객체를 사용하여 Reservation 생성
+        Reservation reservation = new Reservation(managedUser, room, requestDto.getStartAt(), requestDto.getEndAt());
         Reservation savedReservation = reservationRepository.save(reservation);
-
         return savedReservation.getId();
     }
 

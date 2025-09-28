@@ -24,4 +24,9 @@ public class User {
     @Column(name = "roles", nullable = false)
     private RolesType roles;
 
+    public User(String name, String password, RolesType rolesType) {
+        this.name = name;
+        this.password = password;
+        this.roles = rolesType;
+    }
 }

@@ -24,4 +24,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("startOfDay") LocalDateTime startOfDay,
             @Param("endOfDay") LocalDateTime endOfDay
     );
+
+    List<Reservation> findAllByRoom(Room testRoom);
 }
