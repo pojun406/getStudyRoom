@@ -21,4 +21,9 @@ public class Room {
     @Column(name = "capacity")
     private Long capacity;
 
+    public Room(String name, String location, Long capacity) {
+        this.name = name;
+        this.location = location;
+        this.capacity = capacity;
+    }
 }

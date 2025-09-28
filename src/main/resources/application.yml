@@ -1,0 +1,9 @@
+# application.properties -> application.yml
+spring:
+  application:
+    name: getStudyRoom
+
+#jwt secret Key
+jwt:
+  secret:
+    key: U3luY0xpZmU=
