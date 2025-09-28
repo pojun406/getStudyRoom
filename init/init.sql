@@ -9,7 +9,7 @@ CREATE TABLE room (
                       id BIGINT NOT NULL AUTO_INCREMENT,
                       name VARCHAR(255),
                       location VARCHAR(255),
-                      capacity BIGINT,
+                      capacity INT,
                       PRIMARY KEY (id)
 );
 

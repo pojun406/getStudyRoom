@@ -1,20 +1,38 @@
 version: '3.8'
 
 services:
-  # ⚙️ MySQL 데이터베이스 서비스 정의
+  # MySQL 데이터베이스 서비스
   db:
     image: mysql:8.0
     container_name: study_room_db
     restart: always
-    # 포트 설정 (로컬 PC : 컨테이너)
-    ports:
-      - "3306:3306"
-    # 데이터베이스 설정 및 인증 정보
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_DATABASE: study_room # 생성할 데이터베이스 스키마 이름
-      MYSQL_ROOT_PASSWORD: rootpassword # 루트 계정 비밀번호
-    # 💾 볼륨 설정: DB 데이터를 로컬에 저장하여 영속성 확보
-    # 🚀 초기화 스크립트: 컨테이너 최초 생성 시 init.sql 실행
+      MYSQL_ROOT_PASSWORD: study_password
+      MYSQL_DATABASE: study_room_db
+      MYSQL_USER: study_user
+      MYSQL_PASSWORD: study_password
     volumes:
-      - ./db_data:/var/lib/mysql
-      - ./init:/docker-entrypoint-initdb.d
+      - ./db_data:/var/lib/mysql # 데이터 영속성을 위해 로컬 디렉토리와 연결
+    ports:
+      - "3306:3306" # 로컬 PC에서 DB에 접속하기 위한 포트
+
+  # Spring Boot 애플리케이션 서비스
+  app:
+    # 현재 디렉토리의 Dockerfile을 사용하여 이미지 빌드
+    build: .
+    container_name: study_room_app
+    restart: on-failure
+    # db 서비스가 시작된 후에 app 서비스가 시작되도록 순서 제어
+    depends_on:
+      - db
+    # Spring Boot에 전달할 환경 변수 설정
+    environment:
+      # DB 호스트 이름으로 localhost가 아닌 서비스 이름 'db'를 사용
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/study_room_db?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=study_user
+      - SPRING_DATASOURCE_PASSWORD=study_password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DOCKER_COMPOSE_ENABLED=false
+    ports:
+      - "8080:8080" # 로컬 PC와 앱의 포트 연결

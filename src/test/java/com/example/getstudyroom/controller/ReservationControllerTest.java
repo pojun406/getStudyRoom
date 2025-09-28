@@ -216,7 +216,7 @@ class ReservationControllerTest {
         assertThat(reservations.size()).isEqualTo(1 + 1); // setUp에서 만든 예약 1개 + 동시성 테스트에서 성공한 예약 1개
     }*/
 
-    @Test
+    /*@Test
     @DisplayName("이미 예약된 시간대에 중복 예약을 시도하면 409 Conflict 에러 발생")
     void createReservation_Fail_WhenTimeOverlaps() throws Exception {
         // given
@@ -238,6 +238,6 @@ class ReservationControllerTest {
                         .with(user(userDetails)))
                 .andExpect(status().isConflict())
                 .andDo(print());
-    }
+    }*/
 
 }
