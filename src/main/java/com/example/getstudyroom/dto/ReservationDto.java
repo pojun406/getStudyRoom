@@ -4,10 +4,13 @@ import com.example.getstudyroom.entity.Reservation;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 public class ReservationDto {
+
+    @Getter
     // 예약 생성을 위한 요청 DTO
     public static class Request {
         @NotNull(message = "방 ID는 필수입니다.")

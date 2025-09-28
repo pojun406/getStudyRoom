@@ -6,4 +6,4 @@ spring:
 #jwt secret Key
 jwt:
   secret:
-    key: U3luY0xpZmU=
+    key: SSByZWFsbHkgd2FudCB0byBnZXQgYSBqb2IgYXQgU3luY0xpZmUK
