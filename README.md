@@ -42,3 +42,4 @@ Spring Boot와 JPA를 기반으로 한 간단한 스터디룸 예약 시스템
 4.  **애플리케이션 확인**
     -   애플리케이션은 `http://localhost:8080`에서 실행됩니다.
     -   데이터베이스는 `localhost:3306`에서 접속할 수 있습니다.
+<img width="2014" height="111" alt="image" src="https://github.com/user-attachments/assets/21f447c6-1c0c-4c11-91f6-34b7f0c84e08" />
